@@ -1,4 +1,4 @@
-package com.tinubu.test;
+package com.tinubu.testjk;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

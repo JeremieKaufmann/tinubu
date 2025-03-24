@@ -1,12 +1,9 @@
-package com.tinubu.entity;
+package com.tinubu.testjk.entity;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-
-import com.tinubu.enums.PolicyStatus;
+import com.tinubu.testjk.enums.PolicyStatus;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,6 +11,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -23,7 +22,7 @@ import lombok.Data;
 public class InsurancePolicy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @NotBlank(message = "Name should not be blank")
     private String name;
@@ -38,9 +37,18 @@ public class InsurancePolicy {
     @NotNull(message = "Coverage end date shoud not be null")
     private LocalDate coverageEndDate;
 
-    @CreatedDate
     private LocalDateTime creationDate;
 
-    @LastModifiedDate
     private LocalDateTime lastUpdateDate;
+
+    @PrePersist
+    protected void onCreate() {
+       this.creationDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void updateEndDate() {
+        this.lastUpdateDate = LocalDateTime.now();
+    }
+
 }
