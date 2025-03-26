@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Table, Button, Modal, Form } from "react-bootstrap";
 import { getPolicies, createPolicy, updatePolicy } from "./apiService";
+import { format } from 'date-fns';
 
 const STATUS_OPTIONS = ["ACTIVE", "INACTIVE"];
 
@@ -70,22 +71,19 @@ const App = () => {
 
   return (
     <div className="container mt-5">
-      <h2>Gestion des polices d’assurance</h2>
-      <Button variant="primary" onClick={handleShowAddModal} className="mb-3">
-        Ajouter une police
-      </Button>
+      <h1>Insurance Policies</h1>
 
       <Table striped bordered hover>
         <thead>
           <tr>
             <th>ID</th>
-            <th>Nom</th>
-            <th>Statut</th>
-            <th>Début Couverture</th>
-            <th>Fin Couverture</th>
-            <th>Création</th>
-            <th>Dernière mise à jour</th>
-            <th>Actions</th>
+            <th>Name</th>
+            <th>Status</th>
+            <th>Coverage start date</th>
+            <th>Coverage end date</th>
+            <th>Creation date</th>
+            <th>Last update</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -94,33 +92,37 @@ const App = () => {
               <td>{policy.id}</td>
               <td>{policy.name}</td>
               <td>{policy.status}</td>
-              <td>{policy.coverageStartDate}</td>
-              <td>{policy.coverageEndDate}</td>
-              <td>{policy.creationDate}</td>
-              <td>{policy.lastUpdateDate || "—"}</td>
+              <td>{policy.coverageStartDate ? format(new Date(policy.coverageStartDate), "dd/MM/yyyy") : "—"}</td>
+              <td>{policy.coverageEndDate ? format(new Date(policy.coverageEndDate), "dd/MM/yyyy") : "—"}</td>
+              <td>{policy.creationDate ? format(new Date(policy.creationDate), "dd/MM/yyyy HH:mm:ss") : "—"}</td>
+              <td>{policy.lastUpdateDate ? format(new Date(policy.lastUpdateDate), "dd/MM/yyyy HH:mm:ss") : "—"}</td>
               <td>
                 <Button variant="warning" size="sm" onClick={() => handleShowEditModal(policy)}>
-                  Modifier
+                  Edit
                 </Button>
               </td>
             </tr>
           ))}
         </tbody>
       </Table>
+      <Button variant="primary" onClick={handleShowAddModal} className="mb-3">
+        Add a new Insurance Policy
+      </Button>
 
-      {/* Modal pour ajouter/modifier une police */}
+
+      {/* Modal to add/edit policy */}
       <Modal show={showModal} onHide={handleCloseModal}>
         <Modal.Header closeButton>
-          <Modal.Title>{isEditing ? "Modifier la police" : "Ajouter une nouvelle police"}</Modal.Title>
+          <Modal.Title>{isEditing ? "Update insurance policy" : "Add a new insurance policy"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3">
-              <Form.Label>Nom</Form.Label>
+              <Form.Label>Name</Form.Label>
               <Form.Control type="text" name="name" value={currentPolicy.name} onChange={handleChange} />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Statut</Form.Label>
+              <Form.Label>Status</Form.Label>
               <Form.Select name="status" value={currentPolicy.status} onChange={handleChange}>
                 {STATUS_OPTIONS.map((status) => (
                   <option key={status} value={status}>
@@ -130,21 +132,21 @@ const App = () => {
               </Form.Select>
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Début de couverture</Form.Label>
+              <Form.Label>Coverage start date</Form.Label>
               <Form.Control type="date" name="coverageStartDate" value={currentPolicy.coverageStartDate} onChange={handleChange} />
             </Form.Group>
             <Form.Group className="mb-3">
-              <Form.Label>Fin de couverture</Form.Label>
+              <Form.Label>Coverage end date</Form.Label>
               <Form.Control type="date" name="coverageEndDate" value={currentPolicy.coverageEndDate} onChange={handleChange} />
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
-            Annuler
+            Cancel
           </Button>
           <Button variant="primary" onClick={handleSavePolicy}>
-            Enregistrer
+            Save
           </Button>
         </Modal.Footer>
       </Modal>
