@@ -16,7 +16,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.github.javafaker.Faker;
 import com.tinubu.testjk.entity.InsurancePolicy;
-import com.tinubu.testjk.enums.PolicyStatus;
+import com.tinubu.testjk.enums.InsurancePolicyStatus;
 import com.tinubu.testjk.repository.InsurancePolicyRepository;
 
 import jakarta.persistence.EntityManager;
@@ -38,7 +38,7 @@ public class InsurancePolicyRepositoryTest {
         // Initialisation d'une insurance policy pour les tests
         policy = new InsurancePolicy();
         policy.setName(faker.company().name());
-        policy.setStatus(PolicyStatus.ACTIVE);
+        policy.setStatus(InsurancePolicyStatus.ACTIVE);
         LocalDate now = LocalDate.now();
         policy.setCoverageStartDate(now.minusWeeks(faker.number().randomDigit()));
         policy.setCoverageEndDate(now.plusWeeks(faker.number().randomDigit()));
@@ -86,7 +86,7 @@ public class InsurancePolicyRepositoryTest {
         LocalDate now = LocalDate.now();
         foundPolicy.setCoverageStartDate(now.minusMonths(faker.number().randomDigit() * 2));
         foundPolicy.setCoverageEndDate(now.plusMonths(faker.number().randomDigit() * 3));
-        foundPolicy.setStatus(PolicyStatus.INACTIVE);
+        foundPolicy.setStatus(InsurancePolicyStatus.INACTIVE);
         // Save and flush to force lastUpdateDate
         InsurancePolicy updatedPolicy = repository.saveAndFlush(foundPolicy);
         System.out.println("updatedPolicy=" + updatedPolicy);
