@@ -55,7 +55,7 @@ public class TestApplicationTests {
 
 	@Test
 	void testCreatePolicy_OK() {
-		ResponseEntity<InsurancePolicy> response = restTemplate.postForEntity("/policy", policy, InsurancePolicy.class);
+		ResponseEntity<InsurancePolicy> response = restTemplate.postForEntity("/api/v1/policy", policy, InsurancePolicy.class);
 
 		assertNotNull(response);
 		assertNotNull(response.getStatusCode());
@@ -72,7 +72,7 @@ public class TestApplicationTests {
 	@Test
 	void testCreatePolicy_KO_missingName() {
 		policy.setName(null);
-		ResponseEntity<String> response = restTemplate.postForEntity("/policy", policy, String.class);
+		ResponseEntity<String> response = restTemplate.postForEntity("/api/v1/policy", policy, String.class);
 
 		assertNotNull(response);
 		assertNotNull(response.getStatusCode());
@@ -85,7 +85,7 @@ public class TestApplicationTests {
 	@Test
 	void testCreatePolicy_KO_missingStatus() {
 		policy.setStatus(null);
-		ResponseEntity<String> response = restTemplate.postForEntity("/policy", policy, String.class);
+		ResponseEntity<String> response = restTemplate.postForEntity("/api/v1/policy", policy, String.class);
 
 		assertNotNull(response);
 		assertNotNull(response.getStatusCode());
@@ -99,7 +99,7 @@ public class TestApplicationTests {
 	@Test
 	void testCreatePolicy_KO_EmptyPolicy() {
 		policy = new InsurancePolicy();
-		ResponseEntity<String> response = restTemplate.postForEntity("/policy", policy, String.class);
+		ResponseEntity<String> response = restTemplate.postForEntity("/api/v1/policy", policy, String.class);
 
 		assertNotNull(response);
 		assertNotNull(response.getStatusCode());
@@ -116,7 +116,7 @@ public class TestApplicationTests {
 	@Test
 	void testCreatePolicy_KO_EndDateBeforeStartDate() {
 		policy.setCoverageEndDate(policy.getCoverageStartDate().minusDays(1));
-		ResponseEntity<String> response = restTemplate.postForEntity("/policy", policy, String.class);
+		ResponseEntity<String> response = restTemplate.postForEntity("/api/v1/policy", policy, String.class);
 		assertNotNull(response);
 		assertNotNull(response.getStatusCode());
 		assertEquals(response.getStatusCode(), HttpStatus.BAD_REQUEST);
@@ -127,7 +127,7 @@ public class TestApplicationTests {
 	@Test
 	void testGetAllEntities() {
 		ResponseEntity<List<InsurancePolicy>> response = restTemplate.exchange(
-				"/policies",
+				"/api/v1/policies",
 				HttpMethod.GET,
 				null,
 				new ParameterizedTypeReference<List<InsurancePolicy>>() {
@@ -170,7 +170,7 @@ public class TestApplicationTests {
 		foundPolicy.setCoverageEndDate(LocalDate.now().plusDays(faker.number().randomNumber()));
 		Map<String, String> params = new HashMap<String, String>();
 		params.put("id", id);
-		restTemplate.put("/policy/{id}", foundPolicy, params);
+		restTemplate.put("/api/v1/policy/{id}", foundPolicy, params);
 
 		// We retrieve it again to check modifications
 		InsurancePolicy updatedPolicy = getInsurancePolicy(id);
@@ -180,7 +180,7 @@ public class TestApplicationTests {
 
 	private InsurancePolicy getInsurancePolicy(String id) {
 		ResponseEntity<InsurancePolicy> response = restTemplate.exchange(
-				"/policy/{id}",
+				"/api/v1/policy/{id}",
 				HttpMethod.GET,
 				null,
 				InsurancePolicy.class,

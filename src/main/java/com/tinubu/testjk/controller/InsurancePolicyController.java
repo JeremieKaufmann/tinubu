@@ -21,23 +21,23 @@ public class InsurancePolicyController {
     @Autowired
     InsurancePolicyService policyService;
 
-    @GetMapping("/policies")
+    @GetMapping("/api/v1/policies")
     public List<InsurancePolicy> getPolicies() {
         return policyService.findAll();
     }
 
-    @PostMapping("/policy")
+    @PostMapping("/api/v1/policy")
     public ResponseEntity<InsurancePolicy> createPolicy(@RequestBody InsurancePolicy policy) {
         InsurancePolicy createdPolicy = policyService.createPolicy(policy);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPolicy);
     }
 
-    @GetMapping("/policy/{id}")
+    @GetMapping("/api/v1/policy/{id}")
     public InsurancePolicy getPolicy(@PathVariable Integer id) {
         return policyService.findPolicy(id);
     }
 
-    @PutMapping("/policy/{id}")
+    @PutMapping("/api/v1/policy/{id}")
     public InsurancePolicy updatePolicy(@PathVariable Integer id, @RequestBody InsurancePolicy policy) {
         return policyService.updatePolicy(id, policy);
     }
